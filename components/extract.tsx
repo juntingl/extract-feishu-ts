@@ -65,8 +65,12 @@ export default function Extract() {
           }
           case colIndex.type: {
             const lowerCaseContent = content.toLowerCase()
-            let type: "string" | "number" | "any[]" | "Record<string, any>" =
-              "string"
+            let type:
+              | "string"
+              | "number"
+              | "any[]"
+              | "Record<string, any>"
+              | "boolean" = "string"
 
             if (
               ["double", "float", "decimal", "long", "int"].some((t) =>
@@ -77,7 +81,7 @@ export default function Extract() {
             } else if (
               ["bool"].some((t) => lowerCaseContent.includes(t.toLowerCase()))
             ) {
-              type = "number"
+              type = "boolean"
             } else if (
               ["array", "list"].some((t) =>
                 lowerCaseContent.includes(t.toLowerCase())
