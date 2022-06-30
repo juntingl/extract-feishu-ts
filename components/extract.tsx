@@ -53,7 +53,9 @@ export default function Extract() {
       tr.querySelectorAll("td").forEach((td, j) => {
         let content = ""
         td.querySelectorAll('span[data-string="true"]').forEach((str) => {
-          content += str.textContent
+          if (typeof str.textContent === "string") {
+            content += str.textContent
+          }
         })
 
         switch (j + 1) {
@@ -62,12 +64,12 @@ export default function Extract() {
             break
           }
           case colIndex.type: {
-            const lowerCaseContent = content.toLocaleLowerCase()
+            const lowerCaseContent = content.toLowerCase()
             let type: "string" | "number" = "string"
 
             if (
-              ["integer", "double", "bigint", "float", "decimal"].some((t) =>
-                t.includes(lowerCaseContent)
+              ["integer", "double", "bigint", "float", "decimal", "long"].some(
+                (t) => t.includes(lowerCaseContent)
               )
             ) {
               type = "number"
@@ -77,13 +79,13 @@ export default function Extract() {
             break
           }
           case colIndex.required: {
-            const lowerCaseContent = content.toLocaleLowerCase()
+            const lowerCaseContent = content.toLowerCase()
             field = field.replace(
               "$3",
               String(requiredStr)
                 .replace(/[，\s]/g, ",")
                 .split(",")
-                .some((c) => c.includes(lowerCaseContent))
+                .some((c) => lowerCaseContent.includes(c.toLowerCase()))
                 ? ""
                 : "?"
             )

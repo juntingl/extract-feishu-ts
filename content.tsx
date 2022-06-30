@@ -26,7 +26,6 @@ export const config: PlasmoContentScript = {
 }
 
 export default function App() {
-  console.log("content script")
   return (
     <div data-theme="light">
       <Extract />
