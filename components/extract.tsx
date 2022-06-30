@@ -18,12 +18,22 @@ export default function Extract() {
   })
 
   useEffect(() => {
-    document.querySelectorAll(".ace-table-wrapper-outer").forEach((table) => {
-      table.addEventListener("mouseover", () => {
-        reference(table)
-        setIsOpenButton(true)
+    // 事件代理
+    document
+      .querySelector("#doc-container")
+      ?.addEventListener("click", (event) => {
+        let node = (event || window.event).target as Element
+
+        // 递归父节点是否是表格
+        while (node && node.parentNode && node.parentNode !== document.body) {
+          if (node?.classList?.contains("ace-table-wrapper-outer")) {
+            reference(node)
+            setIsOpenButton(true)
+            break
+          }
+          node = node.parentNode as Element
+        }
       })
-    })
 
     document
       .querySelector(".etherpad-container-wrapper")
