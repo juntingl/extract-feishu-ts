@@ -68,8 +68,8 @@ export default function Extract() {
             let type: "string" | "number" = "string"
 
             if (
-              ["integer", "double", "bigint", "float", "decimal", "long"].some(
-                (t) => t.includes(lowerCaseContent)
+              ["double", "float", "decimal", "long", "int"].some((t) =>
+                lowerCaseContent.includes(t.toLowerCase())
               )
             ) {
               type = "number"
