@@ -7,6 +7,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 
 import { Settings, settingsAtom } from "~store/settings"
 
+import SwitchDarkMode from "./dark-mode/switch-dark-mode"
 import SettingsForm from "./setttings-form"
 import TsHighlight from "./ts-highlight"
 
@@ -18,28 +19,44 @@ export default function Extract() {
   })
 
   useEffect(() => {
-    // 事件代理
-    document
-      .querySelector("#doc-container")
-      ?.addEventListener("click", (event) => {
-        let node = (event || window.event).target as Element
+    const docContainer = document.querySelector("#doc-container")
+    const scrollContainer = document.querySelector(
+      ".etherpad-container-wrapper"
+    )
 
-        // 递归父节点是否是表格
-        while (node && node.parentNode && node.parentNode !== document.body) {
-          if (node?.classList?.contains("ace-table-wrapper-outer")) {
-            reference(node)
-            setIsOpenButton(true)
-            break
-          }
-          node = node.parentNode as Element
+    if (!docContainer) return
+
+    const handleTableClick = (event: Event) => {
+      let node = (event || window.event).target as Element
+
+      while (
+        node &&
+        (node as HTMLDivElement).contentEditable !== "true" &&
+        node.parentNode &&
+        (node.parentNode as HTMLDivElement).contentEditable !== "true" &&
+        node.parentNode !== docContainer
+      ) {
+        // 是否是表格
+        if (node.classList.contains("ace-table-wrapper-outer")) {
+          reference(node)
+          setIsOpenButton(true)
+          break
         }
-      })
+        node = node.parentNode as Element
+      }
+    }
 
-    document
-      .querySelector(".etherpad-container-wrapper")
-      .addEventListener("scroll", () => {
-        setIsOpenButton(false)
-      })
+    const handleTableWrapperScroll = () => {
+      setIsOpenButton(false)
+    }
+
+    docContainer.addEventListener("click", handleTableClick)
+    scrollContainer?.addEventListener("scroll", handleTableWrapperScroll)
+
+    return () => {
+      docContainer.removeEventListener("click", handleTableClick)
+      scrollContainer?.removeEventListener("scroll", handleTableWrapperScroll)
+    }
   }, [])
 
   const [setttings] = useAtom(settingsAtom)
@@ -162,18 +179,23 @@ export default function Extract() {
           setTs("")
         }}>
         <div className="modal-box" onClick={(ev) => ev.stopPropagation()}>
-          <h3 className="font-bold text-lg flex justify-between items-center">
+          <h3 className="font-bold text-lg flex items-center">
             {isOpenSettingsForm ? "设置" : "TypeScript"}
-            <AdjustmentsIcon
-              className={clsx(
-                "hover:text-primary-focus text-primary !align-middle w-6 h-6 cursor-pointer",
-                isOpenSettingsForm && "text-primary-focus"
-              )}
-              onClick={() => {
-                setIsOpenSettingsForm(!isOpenSettingsForm)
-                if (!isOpenSettingsForm) extractTs(setttings)
-              }}
-            />
+
+            <span className="ml-auto flex gap-2 justify-end items-center text-lg text-slate-400 dark:text-slate-500">
+              <SwitchDarkMode />
+
+              <AdjustmentsIcon
+                className={clsx(
+                  "hover:opacity-80 align-middle w-6 h-6 cursor-pointer",
+                  isOpenSettingsForm && "!text-sky-500"
+                )}
+                onClick={() => {
+                  setIsOpenSettingsForm(!isOpenSettingsForm)
+                  if (!isOpenSettingsForm) extractTs(setttings)
+                }}
+              />
+            </span>
           </h3>
 
           {isOpenSettingsForm ? (

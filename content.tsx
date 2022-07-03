@@ -1,6 +1,7 @@
 import cssText from "data-text:~/style.css"
 import type { PlasmoContentScript } from "plasmo"
 
+import DarkModeProvider from "~components/dark-mode/dark-mode-provider"
 import Extract from "~components/extract"
 
 export const getStyle = () => {
@@ -27,8 +28,8 @@ export const config: PlasmoContentScript = {
 
 export default function App() {
   return (
-    <div data-theme="light">
+    <DarkModeProvider>
       <Extract />
-    </div>
+    </DarkModeProvider>
   )
 }

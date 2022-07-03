@@ -1,7 +1,7 @@
 {
   "name": "extract-feishu-ts",
   "displayName": "提取飞书ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "自动提取货拉拉飞书文档TS",
   "author": "liaoxuan",
   "scripts": {
@@ -23,6 +23,7 @@
     "react-hook-form": "^7.33.0",
     "react-markdown": "^8.0.3",
     "react-syntax-highlighter": "^15.5.0",
+    "react-use": "^17.4.0",
     "zod": "^3.17.3"
   },
   "devDependencies": {

@@ -10,5 +10,8 @@ module.exports = {
     }
   },
   variants: { extend: { typography: ["dark"] } },
-  plugins: [require("daisyui")]
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: ["light", "dark"]
+  }
 }

@@ -1,8 +1,16 @@
+import { useContext } from "react"
 import ReactMarkdown from "react-markdown"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { materialLight } from "react-syntax-highlighter/dist/cjs/styles/prism"
+import {
+  dark,
+  materialLight
+} from "react-syntax-highlighter/dist/cjs/styles/prism"
+
+import { DarkModeContext } from "./dark-mode/dark-mode-context"
 
 export default function TsHighlight({ ts }: { ts: string }) {
+  const { isDarkMode } = useContext(DarkModeContext)
+
   return (
     <ReactMarkdown
       components={{
@@ -11,7 +19,7 @@ export default function TsHighlight({ ts }: { ts: string }) {
 
           return !inline && match ? (
             <SyntaxHighlighter
-              style={materialLight}
+              style={isDarkMode ? dark : materialLight}
               PreTag="div"
               language={match[1]}
               children={String(children).replace(/\n$/, "")}
